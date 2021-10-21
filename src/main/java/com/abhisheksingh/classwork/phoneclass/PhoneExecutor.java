@@ -23,6 +23,8 @@ public class PhoneExecutor implements Executor {
                         .model(new Phone.Model("M", 12_345, "J"))
                         .weight(1.2)
                         .build();
+        System.out.println("Executing Phone assignment");
         phoneCommand.receiveCall(phone);
+        System.out.println("Finished execution of phone assignment");
     }
 }

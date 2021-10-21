@@ -18,10 +18,23 @@ public class MinMaxArrayExecutor implements Executor {
 
     @Override
     public void execute() {
-        performCall();
+        System.out.println("Executing array assignment");
+        evaluateArrayOps();
+        System.out.println("Finished execution of array assignment");
     }
 
-    private void performCall() {
+    /**
+     * This method performs the required assignments for the arrayn amely:
+     *
+     * <ul>
+     *   <li>Find min element in an array
+     *   <li>Find max element in an array
+     *   <li>Find average amount of an array
+     *   <li>Sort the array in ascending order
+     *   <li>Remove all occurrences of a given set of words
+     * </ul>
+     */
+    private void evaluateArrayOps() {
         System.out.println("Min: " + component.min());
         System.out.println("Max: " + component.max());
         System.out.println("Average: " + component.average());

@@ -22,6 +22,9 @@ public class Driver implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        System.out.println("Program execution started");
+        System.out.println("---------------------------");
+        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxx");
         runTasks();
     }
 
