@@ -1,0 +1,111 @@
+plugins {
+    id 'org.springframework.boot' version '2.5.5'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id "com.diffplug.spotless" version "5.17.0"
+
+    id 'idea' // in case you use Intelli-J IDEA
+}
+
+apply from: "${rootDir}/gradle/static-code-analysis.gradle"
+
+group = 'com.abhisheksingh.classwork'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+dependencyManagement {
+    resolutionStrategy {
+        cacheDynamicVersionsFor 0, 'seconds'
+    }
+}
+
+ext {
+    springVersion = "2.5.5"
+    springSecurityTestVersion = "5.5.1"
+    apacheCamelSpringBootStarter = "3.12.0"
+    flywayVersion = "8.0.0"
+    lombokVersion = "1.18.22"
+    h2Version = "1.4.200"
+    postgresVersion = "42.2.24.jre7"
+    springDocOpenAipVersion = "1.5.11"
+    joolVersion = "0.9.14"
+}
+
+dependencies {
+    developmentOnly "org.springframework.boot:spring-boot-devtools:${springVersion}"
+
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // Spring Boot starter nonsense
+    implementation "org.springframework.boot:spring-boot-starter-validation:${springVersion}"
+    implementation "org.springframework.boot:spring-boot-starter:${springVersion}"
+
+    // JOOL for rich stream processing
+    implementation "org.jooq:jool-java-8:${joolVersion}"
+
+    // Lombok
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled(false)
+}
+
+spotless {
+    java {
+        importOrder('java', 'javax', 'io.ekyamcollaboration.backend', '')
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        indentWithTabs(2)
+        endWithNewline()
+        googleJavaFormat('1.11.0')
+                .aosp()
+                .reflowLongStrings()
+                .groupArtifact('com.google.googlejavaformat:google-java-format')
+    }
+}
+
+bootRun {
+    jvmArgs = ['-Dspring.profiles.active=local',
+               '-XX:+UnlockDiagnosticVMOptions',
+               '-Xlog:gc+ergo',
+               '-Xlog:gc+stats',
+               '-XX:+AlwaysPreTouch',
+               '-Xmx1g', '-Xms1g',
+               '-XX:+UseNUMA',
+               '-XX:-UseBiasedLocking',
+               '-XX:+DisableExplicitGC',
+               '-XX:ShenandoahGCMode=normal/satb',
+               '-XX:+ShenandoahVerify',
+               '-XX:+HeapDumpOnOutOfMemoryError',
+               '-XX:HeapDumpPath=heapdump.hprof',
+               '-XX:StartFlightRecording=disk=true' +
+                       ',dumponexit=true' +
+                       ',filename=recording.jfr,' +
+                       'maxsize=1024m' +
+                       ',maxage=1d' +
+                       ',settings=profile' +
+                       ',path-to-gc-roots=true',
+               '-Xverify:all']
+}
